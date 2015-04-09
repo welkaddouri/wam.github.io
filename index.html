@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title></title>
+    </head>
+    
+    <body>
+        <script>
+            var pagelist = "index.waPage/index.html,@@pagelink@@",
+                conf = {},
+                indexPath = "index.waPage/",
+                platform = getInfo(navigator.userAgent);
+
+
+            conf.smartphone = indexPath + "index-smartphone.html";
+            conf.tablet = indexPath + "index-tablet.html";
+            conf.desktop = indexPath + "index.html";
+
+            //alert(getStartPage(conf, platform.type));
+            //console.log("test:" + getStartPage(conf, platform.type));
+            
+            window.location.href = getStartPage(conf, platform.type);
+
+            function getStartPage(conf, pfType) {
+                var pg;
+
+                if (conf[pfType] && pagelist.indexOf(conf[pfType]) >= 0) {
+                    return conf[pfType];
+                }
+
+                pg = getPage(conf, "tablet");
+                if (pg) {
+                    return pg;
+                }
+                pg = getPage(conf, "mobile");
+                if (pg) {
+                    return pg;
+                }
+                pg = getPage(conf, "desktop");
+                if (pg) {
+                    return pg;
+                }
+            }
+
+            function getPage(conf, pfType) {
+                var pg;
+
+                if (conf[pfType] && pagelist.indexOf(conf[pfType]) >= 0) {
+                    return conf[pfType];
+                }
+
+            }
+
+
+            function getInfo(userAgent) {
+                var conf = {},
+                    platform = {};
+
+                switch (true) {
+
+                    case (/iPhone/i).test(userAgent):
+
+                        platform.device = "iPhone";
+                        platform.OS = "iOs";
+                        platform.type = "smartphone";
+
+                        break;
+                    case (/iPod/i).test(userAgent):
+
+                        platform.device = "iPod";
+                        platform.OS = "iOs";
+                        platform.type = "smartphone";
+
+                        break;
+                    case (/iPad/i).test(userAgent):
+
+                        platform.device = "iPad";
+                        platform.OS = "iOs";
+                        platform.type = "tablet";
+
+                        break;
+                    case (/Android/i).test(userAgent):
+
+                        if ((/Xoom|Streak|SCH-I800/i).test(userAgent)) { //known Android tablet devices
+
+                            platform.device = "tablet";
+                            platform.OS = "android";
+                            platform.type = "tablet";
+
+                        } else {
+
+                            if ((/Mobile/i).test(userAgent)) { //Most of Android phones devices have the "Mobile" tag despite of the tablets
+
+                                platform.device = "smartphone";
+                                platform.OS = "android";
+                                platform.type = "smartphone";
+
+                            } else { //in this case we presume the device is android tablet
+
+                                platform.device = "";
+                                platform.OS = "android";
+                                platform.type = "tablet";
+
+                            }
+                        }
+                        
+                        break;
+
+                    default:
+                        //in this case we presume the device is a desktop pc
+                        platform.type = "tablet";
+                }
+                return platform;
+
+            }
+        </script>
+    </body>
+
+</html>
